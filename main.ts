@@ -23,7 +23,14 @@ import { join } from "node:path";
 const botDir = process.env.MAKEFUN_BOT_DIR ?? "/bot";
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 
-const linkPath = join(botDir, "VIDEO.json");
+// The video's address lives in this one file, read from the repo and written
+// out under the same name so the gate finds it where it expects it.
+const videoFileName = "VIDEO.json";
+
+const linkPath = join(botDir, videoFileName);
+// Read the address file as raw bytes, never parsed or re-serialized: the
+// gate compares the output byte for byte with the repository file, so any
+// reformatting would change what is scored even when the address is the same.
 let linkBytes: Buffer;
 try {
   linkBytes = readFileSync(linkPath);
